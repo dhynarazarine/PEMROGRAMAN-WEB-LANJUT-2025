@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('t_penjualan', function (Blueprint $table) {
             $table->id('penjualan_id'); 
-            $table->unsignedBigInteger('user_id')->index(); 
-            $table->string('penjualan_kode', 50)->unique(); 
-            $table->integer('harga_jual'); 
+            $table->unsignedBigInteger('user_id')->index();
+            $table->string('pembeli', 50);
+            $table->string('penjualan_kode', 20);
+            $table->dateTime('penjualan_tanggal');  
             $table->timestamps(); 
 
             // Menambahkan foreign key constraint
