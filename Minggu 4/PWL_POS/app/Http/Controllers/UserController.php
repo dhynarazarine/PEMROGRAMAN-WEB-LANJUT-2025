@@ -26,10 +26,15 @@ class UserController extends Controller
         // });
          // Kode digunakan untuk mencari data pengguna berdasarkan id = 1. Jika error maka memunculkan 484
 
-         $user = UserModel::findOr(20, ['username', 'nama'], function () {
-            abort(484);
-         });
+        //  $user = UserModel::findOr(20, ['username', 'nama'], function () {
+        //     abort(484);
+        //  });
         // kode error karena tidak menemukan id = 20 didalam tabel DB
+        
+        $user = UserModel::findOrFail(1); 
+        // Mencari data berdasarkan id, jika data ditemukan maka dikembalikan ke objek $user 
+        // Jika error maka menampilkan error 404
+
         return view('user', ['data' => $user]);
 
     }
