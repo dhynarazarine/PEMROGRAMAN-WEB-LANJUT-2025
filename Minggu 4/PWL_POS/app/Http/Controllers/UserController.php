@@ -40,14 +40,21 @@ class UserController extends Controller
         //     abort(484);
         //  });
         
-        
-        // Praktikum 2.2 – Not Found Exceptions 
+
+        //Praktikum 2.2 – Not Found Exceptions 
         // $user = UserModel::findOrFail(1); 
         // Mencari data berdasarkan id, jika data ditemukan maka dikembalikan ke objek $user 
         // Jika error maka menampilkan error 404
         // $user = UserModel::where('username', 'manager9')->firstOrFail();
         // Mencari data berdasarkan username, namun karena dalam tabel tidak ada manager9 maka menampilkan error 404
-        // return view('user', ['data' => $user]);
+        
+        //Praktikum 2.3 – Retreiving Aggregrates 
+        // $user = UserModel::where('level_id', 2)->count(); // Menghitung jumlah pengguna dengan level_id = 2.
+        // dd($user);
+        $user = UserModel::where('level_id', 2)->count(); // Menghitung jumlah pengguna dengan level_id = 2.
+        return view('user', ['data' => $user]); // Mengirim hasilnya ke view user.blade.php.
+
+
 
     }
 }
