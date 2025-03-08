@@ -51,9 +51,39 @@ class UserController extends Controller
         //Praktikum 2.3 – Retreiving Aggregrates 
         // $user = UserModel::where('level_id', 2)->count(); // Menghitung jumlah pengguna dengan level_id = 2.
         // dd($user);
-        $user = UserModel::where('level_id', 2)->count(); // Menghitung jumlah pengguna dengan level_id = 2.
-        return view('user', ['data' => $user]); // Mengirim hasilnya ke view user.blade.php.
-
+        // return view('user', ['data' => $user]); // Mengirim hasilnya ke view user.blade.php.
+        
+        //Praktikum 2.4 – Retreiving or Creating Models 
+        // $user = UserModel::firstOrCreate(
+        //     [
+        //         'username' => 'manager',
+        //         'nama' => 'Manager',
+        //     ],
+        // ); 
+        // $user = UserModel::firstOrCreate(
+        //     [
+        //         'username' => 'manager22',
+        //         'nama' => 'Manager Dua Dua',
+        //         'password' => Hash::make('12345'),
+        //         'level_id' => 2
+        //     ],
+        // ); 
+        // $user = UserModel::firstOrNew(
+        //     [
+        //         'username' => 'manager',
+        //         'nama' => 'Manager',
+        //     ],
+        // ); 
+        $user = UserModel::firstOrNew(
+            [
+                'username' => 'manager33',
+                'nama' => 'Manager Tiga Tiga',
+                'password' => Hash::make('12345'),
+                'level_id' => 2
+            ],
+        );
+        $user->save();
+        return view('user', ['data' => $user]);
 
 
     }
