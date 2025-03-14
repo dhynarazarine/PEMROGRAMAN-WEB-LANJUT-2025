@@ -25,7 +25,7 @@ Route::get('/', function(){
 });
 
 Route::get('/level', [LevelController::class, 'index']);
-Route::get('/kategori', [KategoriController::class, 'index']);
+Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
 Route::get('/user', [UserController::class, 'index']);
 
 Route::get('/user/tambah', [UserController::class, 'tambah']);
@@ -45,3 +45,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // Jobsheet 5 Praktikum 3 – Membuat form kemudian menyimpan data dalam database
 Route::get('/kategori/create', [KategoriController::class, 'create']);
 Route::post('/kategori', [KategoriController::class, 'store']);
+
+// Tugas 3
+Route::get('/kategori/edit/{id}', [KategoriController::class, 'edit'])->name('kategori.edit');
+Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
+
+
