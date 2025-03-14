@@ -41,3 +41,7 @@ Route::get('/user/hapus/{id}', [UserController::class, 'hapus']);
 // Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Jobsheet 5 Praktikum 3 – Membuat form kemudian menyimpan data dalam database
+Route::get('/kategori/create', [KategoriController::class, 'create']);
+Route::post('/kategori', [KategoriController::class, 'store']);
