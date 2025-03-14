@@ -29,13 +29,13 @@ class KategoriController extends Controller
     }
 
     public function edit($id)
-{
+    {
     $data = KategoriModel::find($id);
     return view('kategori.edit', ['kategori' => $data]);
-}
+    }
 
-public function update(Request $request, $id)
-{
+    public function update(Request $request, $id)
+    {
     KategoriModel::where('kategori_id', $id)->update([
         'kategori_kode' => $request->kodeKategori,
         'kategori_nama' => $request->namaKategori,
@@ -43,7 +43,13 @@ public function update(Request $request, $id)
 
     return redirect()->route('kategori.index')->with('success', 'Kategori berhasil diperbarui');
 
-}
+    }
+
+    public function delete($id)
+    {
+        KategoriModel::where('kategori_id', $id)->delete();
+        return redirect('/kategori');
+    }
 
 
 }
