@@ -55,5 +55,4 @@
     @endforeach
     </table>
 </body>
-
 </html>
