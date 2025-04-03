@@ -1,12 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\LevelController;
+use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\SaleController;
-
-
+use App\Models\KategoriModel;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,19 +21,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Home Page
-Route::get('/home', [HomeController::class, 'home']);
-
-// Product Page
-Route::prefix('category')->group(function(){
-    Route::get('/food-beverage', [ProductController::class, 'foodbeverage']);
-    Route::get('/beauty-health', [ProductController::class, 'beauty']);
-    Route::get('/home-care', [ProductController::class, 'homecare']);
-    Route::get('/baby-kid', [ProductController::class, 'baby']);
-});
-
-// User Page
-Route::get('/user/{id?}/{name?}', [UserController::class, 'user']);
-
-// Sales Page
-Route::get('/sales', [SaleController::class, 'sales']);
+Route::get('/level', [LevelController::class, 'index']);
+Route::get('/kategori', [KategoriController::class, 'index']);
+Route::get('/user', [UserController::class, 'index']);
