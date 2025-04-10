@@ -15,22 +15,25 @@
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert3-theme-bootstrap-4/bootstrap4.min.css') }}">
+  
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('adminlte/dist/css/adminlte.min.css')}}">
-
-@stack('css') <!-- Digunakan untuk memanggil custom css dari perintah push('css') pada masing - masing view -->
+  
+  @stack('css') <!-- Digunakan untuk memanggil custom css dari perintah push('css') pada masing - masing view -->
 </head>
 <body class="hold-transition sidebar-mini">
-<!-- Site wrapper -->
-<div class="wrapper">
+  <!-- Site wrapper -->
+  <div class="wrapper">
     <!-- Navbar -->
     @include('layouts.header')
-  <!-- /.navbar -->
-
-  <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <a href="{{ url('/') }}" class="brand-link">
+    <!-- /.navbar -->
+    
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <!-- Brand Logo -->
+      <a href="{{ url('/') }}" class="brand-link">
       <img src="{{ asset ('adminlte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">PWL - Starter Code</span>
     </a>
@@ -40,20 +43,20 @@
   <!-- /.sidebar -->
 </aside>
 
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    @include('layouts.breadcrumb')
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  @include('layouts.breadcrumb')
+  
+  <!-- Main content -->
+  <section class="content">
+    @yield('content')
+  </section>
+  <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
 
-    <!-- Main content -->
-    <section class="content">
-      @yield('content')
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-
-  @include('layouts.footer')
+@include('layouts.footer')
 </div>
 <!-- ./wrapper -->
 
@@ -74,6 +77,14 @@
 <script src="{{ asset('adminlte/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+
+<!-- jquery-validation-->
+<script src="{{ asset('adminlte/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('adminlte/plugins/jquery-validation/additional-methods.min.js') }}"></script>
+
+<!-- SweetAlert2 -->
+<script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
 <!-- AdminLTE App -->
 <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
 <script>
