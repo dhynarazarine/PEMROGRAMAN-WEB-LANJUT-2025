@@ -289,4 +289,14 @@ class UserController extends Controller
 
         return redirect('/');
     }
+    public function show_ajax(string $id)
+    {
+        $user = UserModel::with('level')->find($id); // with('level') jika ada relasi ke level
+
+        if (!$user) {
+            return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+        }
+
+        return view('user.show_ajax', ['user' => $user]);
+    }
 }
