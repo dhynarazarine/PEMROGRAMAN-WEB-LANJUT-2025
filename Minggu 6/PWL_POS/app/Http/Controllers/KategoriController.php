@@ -29,21 +29,23 @@ class KategoriController extends Controller
     // Ambil data kategori dalam bentuk json untuk datatables
     public function list(Request $request) 
     { 
-        $kategoris = KategoriModel::select('kategori_id', 'kategori_kode', 'kategori_nama');;
-        
-        return DataTables::of($kategoris) 
+        $kategoris = KategoriModel::select('kategori_id', 'kategori_kode', 'kategori_nama');
+
+        return DataTables::of($kategoris)
         // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex) 
-        ->addIndexColumn()  
-        ->addColumn('aksi', function ($kategori) {  // menambahkan kolom aksi 
-            $btn  = '<a href="'.url('/kategori/' . $kategori->kategori_id).'" class="btn btn-info btn sm">Detail</a> '; 
-            $btn .= '<a href="'.url('/kategori/' . $kategori->kategori_id . '/edit').'" class="btn btn warning btn-sm">Edit</a> '; 
-            $btn .= '<form class="d-inline-block" method="POST" action="'. url('/kategori/'.$kategori->kategori_id).'">' . csrf_field() . method_field('DELETE') .  
-                    '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus kategori ini?\');">Hapus</button></form>';      
-            return $btn; 
-        }) 
-        ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html 
-        ->make(true); 
+            ->addIndexColumn()
+            ->addColumn('aksi', function ($kategori) { // menambahkan kolom aksi 
+                $btn  = '<a href="' . url('/kategori/' . $kategori->kategori_id) . '" class="btn btn-info btn-sm">Detail</a> ';
+                $btn .= '<a href="' . url('/kategori/' . $kategori->kategori_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
+                $btn .= '<form class="d-inline-block" method="POST" action="' . url('/kategori/' . $kategori->kategori_id) . '">' 
+                      . csrf_field() . method_field('DELETE') 
+                      . '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin?\')">Hapus</button></form>';
+                return $btn;
+            })
+            ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html 
+            ->make(true);
     }
+
 
     public function create() 
     {
@@ -96,7 +98,7 @@ class KategoriController extends Controller
 
         $activeMenu = 'kategori';
 
-        return view('kategori.edit', ['breadcrumb' => $breadcrumb, 'page' => $page, 'kategori' => $kategori, 'kategori' => $kategori, 'activeMenu' => $activeMenu]);
+        return view('kategori.show', ['breadcrumb' => $breadcrumb, 'page' => $page, 'kategori' => $kategori, 'kategori' => $kategori, 'activeMenu' => $activeMenu]);
     }
     
     //Menampilkan halaman form edit kategori

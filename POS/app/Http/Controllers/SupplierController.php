@@ -77,23 +77,7 @@ class SupplierController extends Controller
         return redirect('/supplier')->with('success', 'Data supplier berhasil disimpan');
     }
 
-    // public function show(string $id)
-    // {
-    //     $supplier = SupplierModel::findOrFail($id);
 
-    //     $breadcrumb = (object)[
-    //         'title' => 'Detail Supplier',
-    //         'list'  => ['Home', 'Supplier', 'Detail']
-    //     ];
-
-    //     $page = (object)[
-    //         'title' => 'Detail Supplier'
-    //     ];
-
-    //     $activeMenu = 'supplier';
-
-    //     return view('supplier.show', compact('breadcrumb', 'page', 'supplier', 'activeMenu'));
-    // }
     public function show(string $id)
     {
         $supplier = SupplierModel::find($id);

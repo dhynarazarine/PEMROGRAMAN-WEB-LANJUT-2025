@@ -29,21 +29,22 @@ class SupplierController extends Controller
     // Ambil data supplier dalam bentuk json untuk datatables
     public function list(Request $request) 
     { 
-        $suppliers = SupplierModel::select('supplier_id', 'supplier_kode', 'supplier_nama', 'alamat_supplier');;
-        
-        return DataTables::of($suppliers) 
-        // menambahkan kolom index / no urut (default nama kolom: DT_RowIndex) 
-        ->addIndexColumn()  
-        ->addColumn('aksi', function ($supplier) {  // menambahkan kolom aksi 
-            $btn  = '<a href="'.url('/supplier/' . $supplier->supplier_id).'" class="btn btn-info btn sm">Detail</a> '; 
-            $btn .= '<a href="'.url('/supplier/' . $supplier->supplier_id . '/edit').'" class="btn btn warning btn-sm">Edit</a> '; 
-            $btn .= '<form class="d-inline-block" method="POST" action="'. url('/supplier/'.$supplier->supplier_id).'">' . csrf_field() . method_field('DELETE') .  
-                    '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin menghapus supplier ini?\');">Hapus</button></form>';      
-            return $btn; 
-        }) 
-        ->rawColumns(['aksi']) // memberitahu bahwa kolom aksi adalah html 
-        ->make(true); 
+        $suppliers = SupplierModel::select('supplier_id', 'supplier_kode', 'supplier_nama', 'alamat_supplier');
+
+        return DataTables::of($suppliers)
+            ->addIndexColumn()
+            ->addColumn('aksi', function ($supplier) {
+                $btn  = '<a href="' . url('/supplier/' . $supplier->supplier_id) . '" class="btn btn-info btn-sm">Detail</a> ';
+                $btn .= '<a href="' . url('/supplier/' . $supplier->supplier_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
+                $btn .= '<form class="d-inline-block" method="POST" action="' . url('/supplier/' . $supplier->supplier_id) . '">' 
+                      . csrf_field() . method_field('DELETE') 
+                      . '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin?\')">Hapus</button></form>';
+                return $btn;
+            })
+            ->rawColumns(['aksi'])
+            ->make(true);
     }
+
 
     public function create() 
     {
@@ -98,7 +99,7 @@ class SupplierController extends Controller
 
         $activeMenu = 'supplier';
 
-        return view('supplier.edit', ['breadcrumb' => $breadcrumb, 'page' => $page, 'supplier' => $supplier, 'supplier' => $supplier, 'activeMenu' => $activeMenu]);
+        return view('supplier.show', ['breadcrumb' => $breadcrumb, 'page' => $page, 'supplier' => $supplier, 'supplier' => $supplier, 'activeMenu' => $activeMenu]);
     }
     
     //Menampilkan halaman form edit supplier
