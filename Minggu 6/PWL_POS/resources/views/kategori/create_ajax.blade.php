@@ -54,7 +54,7 @@
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            dataKategori.ajax.reload(null, false); // reload tanpa reset pagination
+                            dataKategori.ajax.reload(null, false); 
                         } else {
                             $('.error-text').text('');
                             $.each(response.msgField, function (prefix, val) {
