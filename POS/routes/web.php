@@ -8,6 +8,7 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\PenjualanController;
+use App\Http\Controllers\AuthController;
 use App\Models\KategoriModel;
 use Illuminate\Support\Facades\Route;
 
@@ -147,3 +148,32 @@ Route::group(['prefix'=>'penjualan'], function(){
     Route::get('/{id}/show_ajax', [PenjualanController::class, 'show_ajax']); // Menampilkan detail penjualan menggunakan AJAX
     Route::delete('/{id}',[PenjualanController::class,'destroy']);// menghapus data penjualan
 });
+
+//jobsheet 7
+
+Route::pattern('id', '[0-9]+'); // artinya ketika ada parameter {id}, maka harus berupa angka
+Route::get('login', [AuthController::class, 'login'])->name('login');
+Route::post('login', [AuthController::class, 'postlogin']);
+Route::post('logout', [AuthController::class, 'logout'])->middleware('auth');
+Route::middleware(['auth'])->group(function() { // artinya semua route di dalam group ini harus login dulu
+});
+
+// artinya semua route di dalam group ini harus punya role ADM
+Route::middleware(['authorize:ADM'])->group(function () {
+    Route::group(['prefix' => 'level'], function () {
+            Route::get('/', [LevelController::class, 'index']);
+            Route::post('/list', [LevelController::class, 'list']);
+            Route::get('/create', [LevelController::class, 'create']);
+            Route::get('/create_ajax', [LevelController::class, 'create_ajax']);
+            Route::post('/ajax', [LevelController::class, 'store_ajax']);
+            Route::post('/', [LevelController::class, 'store']);
+            Route::get('/{id}', [LevelController::class, 'show']);
+            Route::get('/{id}/edit', [LevelController::class, 'edit']);
+            Route::get('/{id}/edit_ajax', [LevelController::class, 'edit_ajax']);
+            Route::put('/{id}/update_ajax', [LevelController::class, 'update_ajax']);
+            Route::get('/{id}/show_ajax', [LevelController::class, 'show_ajax']);
+            Route::delete('/{id}', [LevelController::class, 'destroy']);
+            Route::get('/{id}/delete_ajax', [LevelController::class, 'confirm_ajax']);
+            Route::delete('/{id}/delete_ajax', [LevelController::class, 'delete_ajax']);
+        });
+    });
