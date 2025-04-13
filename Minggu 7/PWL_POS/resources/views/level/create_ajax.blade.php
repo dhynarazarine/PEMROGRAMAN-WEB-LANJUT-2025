@@ -29,6 +29,7 @@
 </form>
 
 <script>
+    
     $(document).ready(function () {
         $("#form-tambah").validate({
             rules: {
