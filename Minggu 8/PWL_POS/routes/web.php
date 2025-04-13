@@ -190,6 +190,8 @@ Route::middleware(['authorize:ADM,MNG,STF'])->group(function () {
                 Route::delete('/{id}', [UserController::class, 'destroy']);  // menghapus data user
                 Route::get('export_excel', [UserController::class, 'export_excel']); 
                 Route::get('export_pdf', [UserController::class, 'export_pdf']); 
+                Route::get('/profile', [UserController::class, 'profile_page']);
+                Route::post('/update_picture', [UserController::class, 'update_picture']);
             });
         });
     Route::middleware(['authorize:ADM,MNG,STF'])->group(function () {
