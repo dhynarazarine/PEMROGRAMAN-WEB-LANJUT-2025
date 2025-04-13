@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class SupplierController extends Controller
 {
@@ -338,4 +339,63 @@ class SupplierController extends Controller
 
         return redirect('/');
     }
+
+    
+     // Menampilkan form export supplier
+     public function export_excel()
+     {
+         // Ambil data supplier yang akan diekspor
+         $supplier = SupplierModel::select('supplier_id', 'supplier_kode', 'supplier_nama', 'alamat_supplier')
+             ->orderBy('supplier_id')
+             ->get();
+ 
+         // Load library PhpSpreadsheet
+         $spreadsheet = new Spreadsheet();
+         $sheet = $spreadsheet->getActiveSheet();
+ 
+         // Set header kolom
+         $sheet->setCellValue('A1', 'No');
+         $sheet->setCellValue('B1', 'Kode supplier');
+         $sheet->setCellValue('C1', 'Nama supplier');
+         $sheet->setCellValue('D1', 'Alamat supplier');
+ 
+         // Format header bold
+         $sheet->getStyle('A1:D1')->getFont()->setBold(true);
+ 
+         // Isi data supplier
+         $no = 1;
+         $baris = 2;
+         foreach ($supplier as $value) {
+             $sheet->setCellValue('A' . $baris, $no);
+             $sheet->setCellValue('B' . $baris, $value->supplier_kode);
+             $sheet->setCellValue('C' . $baris, $value->supplier_nama);
+             $sheet->setCellValue('D' . $baris, $value->alamat_supplier);
+             $baris++;
+             $no++;
+         }
+ 
+         // Set auto size untuk kolom
+         foreach (range('A', 'D') as $columnID) {
+             $sheet->getColumnDimension($columnID)->setAutoSize(true);
+         }
+ 
+         // Set title sheet
+         $sheet->setTitle('Data Supplier');
+         
+         // Generate filename
+         $filename = 'Data_Supplier_' . date('Y-m-d_H-i-s') . '.xlsx';
+ 
+         // Set header untuk download file
+         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+         header('Content-Disposition: attachment;filename="' . $filename . '"');
+         header('Cache-Control: max-age=0');
+         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+         header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+         header('Cache-Control: cache, must-revalidate');
+         header('Pragma: public');
+ 
+         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+         $writer->save('php://output');
+         exit;
+     }
 }
