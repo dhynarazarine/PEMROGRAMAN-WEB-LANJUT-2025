@@ -158,6 +158,8 @@ Route::middleware(['authorize:ADM,MNG,STF'])->group(function () {
             Route::get('/{id}/delete_ajax', [BarangController::class, 'confirm_ajax']);
             Route::delete('/{id}/delete_ajax', [BarangController::class, 'delete_ajax']);
             Route::get('/{id}/show_ajax', [BarangController::class, 'show_ajax']);
+            Route::get('import', [BarangController::class, 'import']); 
+            Route::post('import_ajax', [BarangController::class, 'import_ajax']); 
         });
     });
 
