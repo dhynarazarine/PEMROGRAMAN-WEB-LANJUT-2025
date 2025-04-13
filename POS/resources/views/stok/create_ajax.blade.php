@@ -50,6 +50,7 @@
 
 <script>
     $(document).ready(function () {
+        // Inisialisasi validasi form
         $("#form-tambah").validate({
             rules: {
                 barang_id: {
@@ -75,14 +76,15 @@
                     data: $(form).serialize(),
                     success: function (response) {
                         if (response.status) {
-                            $('#myModal').modal('hide');
+                            $('#modal-master').modal('hide'); // Menutup modal setelah berhasil
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            dataStok.ajax.reload(null, false); 
+                            dataStok.ajax.reload(null, false);  // Reload tabel dataStok
                         } else {
+                            // Menampilkan error jika validasi gagal
                             $('.error-text').text('');
                             $.each(response.msgField, function (prefix, val) {
                                 $('#error-' + prefix).text(val[0]);
@@ -93,9 +95,17 @@
                                 text: response.message
                             });
                         }
+                    },
+                    error: function (xhr, status, error) {
+                        // Menangani error saat ajax request gagal
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: 'Terjadi kesalahan pada server!'
+                        });
                     }
                 });
-                return false;
+                return false; // Mencegah form untuk submit ulang
             },
             errorElement: 'span',
             errorPlacement: function (error, element) {

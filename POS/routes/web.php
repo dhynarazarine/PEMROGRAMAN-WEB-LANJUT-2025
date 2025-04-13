@@ -121,11 +121,11 @@ Route::group(['prefix'=>'stok'], function(){
     Route::get('/{id}',[StokController::class,'show']); // menampilkan detail stok
     Route::get('/{id}/edit',[StokController::class,'edit']);// menampilkan halaman form edit stok
     Route::put('/{id}',[StokController::class,'update']);// menyimpan perubahan data stok
-    Route::get('/{id}/edit_ajax',[BarangController::class,'edit_ajax']); // menampilkan halaman form edit barang Ajax
-    Route::put('/{id}/update_ajax',[BarangController::class,'update_ajax']); // menyimpan perubahan data barang Ajax
-    Route::get('/{id}/delete_ajax',[BarangController::class,'confirm_ajax']); // untuk tampilan form confirm delete barang Ajax
-    Route::delete('/{id}/delete_ajax',[BarangController::class,'delete_ajax']); // untuk hapus data barang Ajax
-    Route::get('/{id}/show_ajax', [BarangController::class, 'show_ajax']); // Menampilkan detail barang menggunakan AJAX
+    Route::get('/{id}/edit_ajax',[StokController::class,'edit_ajax']); // menampilkan halaman form edit barang Ajax
+    Route::put('/{id}/update_ajax',[StokController::class,'update_ajax']); // menyimpan perubahan data barang Ajax
+    Route::get('/{id}/delete_ajax',[StokController::class,'confirm_ajax']); // untuk tampilan form confirm delete barang Ajax
+    Route::delete('/{id}/delete_ajax',[StokController::class,'delete_ajax']); // untuk hapus data barang Ajax
+    Route::get('/{id}/show_ajax', [StokController::class, 'show_ajax']); // Menampilkan detail barang menggunakan AJAX
     Route::delete('/{id}',[StokController::class,'destroy']);// menghapus data stok
 });
 

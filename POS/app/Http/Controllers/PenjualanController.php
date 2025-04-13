@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PenjualanModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class PenjualanController extends Controller
 {
@@ -14,9 +15,9 @@ class PenjualanController extends Controller
             'title' => 'Daftar Penjualan',
             'list' => ['Home', 'Penjualan']
         ];
-        
-        $page = (object) [
-            'title' => 'Daftar Penjualan yang tercatat dalam sistem'
+
+        $page = (object)[
+            'title' => 'Daftar transaksi penjualan'
         ];
 
         $activeMenu = 'penjualan';
@@ -24,135 +25,153 @@ class PenjualanController extends Controller
         return view('penjualan.index', compact('breadcrumb', 'page', 'activeMenu'));
     }
 
-    public function list(Request $request) 
-    { 
+    public function list(Request $request)
+    {
         $penjualan = PenjualanModel::select('penjualan_id', 'penjualan_kode', 'pembeli', 'tanggal_penjualan');
+
+        if ($request->penjualan_id) {
+            $penjualan->where('penjualan_id', $request->penjualan_id);
+        }
 
         return DataTables::of($penjualan)
             ->addIndexColumn()
-            ->addColumn('aksi', function ($data) {
-                $btn  = '<a href="' . url('/penjualan/' . $data->penjualan_id) . '" class="btn btn-info btn-sm">Detail</a> ';
-                $btn .= '<a href="' . url('/penjualan/' . $data->penjualan_id . '/edit') . '" class="btn btn-warning btn-sm">Edit</a> ';
-                $btn .= '<form class="d-inline-block" method="POST" action="' . url('/penjualan/' . $data->penjualan_id) . '">' 
-                      . csrf_field() . method_field('DELETE') 
-                      . '<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm(\'Apakah Anda yakin?\')">Hapus</button></form>';
+            ->addColumn('aksi', function ($item) {
+                $btn  = '<button onclick="modalAction(\'' . url('/penjualan/' . $item->penjualan_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/penjualan/' . $item->penjualan_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/penjualan/' . $item->penjualan_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button>';
                 return $btn;
             })
             ->rawColumns(['aksi'])
             ->make(true);
     }
 
-    public function create() 
+    public function create_ajax()
     {
-        $breadcrumb = (object)[
-            'title' => 'Tambah Penjualan',
-            'list' => ['Home', 'Penjualan', 'Tambah']
-        ];
-
-        $page = (object)[
-            'title' => 'Tambah Data Penjualan'
-        ];
-
-        $activeMenu = 'penjualan';
-
-        return view('penjualan.create', compact('breadcrumb', 'page', 'activeMenu'));
+        return view('penjualan.create_ajax');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'penjualan_kode'     => 'required|string|min:3|max:20|unique:t_penjualan,penjualan_kode',
-            'pembeli'            => 'required|string|max:100',
-            'tanggal_penjualan' => 'required|date',
-            'user_id'            => 'required|integer'
-        ]);
-
-        PenjualanModel::create([
-            'penjualan_kode'     => $request->penjualan_kode,
-            'pembeli'            => $request->pembeli,
-            'tanggal_penjualan' => $request->tanggal_penjualan,
-            'user_id'            => $request->user_id
-        ]);
-
-        return redirect('/penjualan')->with('success', 'Data penjualan berhasil disimpan');
-    }
-
-    public function show(string $id)
+    public function store_ajax(Request $request)
 {
-    $penjualan = PenjualanModel::find($id);
+    if ($request->ajax()) {
+        // Validasi data
+        $rules = [
+            'penjualan_kode' => 'required|string|min:3|max:20|unique:t_penjualan,penjualan_kode',
+            'pembeli' => 'required|string|min:3|max:50',
+            'tanggal_penjualan' => 'required|date',
+        ];
 
-    $breadcrumb = (object) [
-        'title' => 'Detail Penjualan',
-        'list'  => ['Home', 'Penjualan', 'Detail']
-    ];
+        $validator = Validator::make($request->all(), $rules);
 
-    $page = (object) [
-        'title' => 'Detail Penjualan'
-    ];
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal!',
+                'msgField' => $validator->errors()
+            ]);
+        }
 
-    $activeMenu = 'penjualan'; // set menu yang sedang aktif
+        // Simpan data
+        PenjualanModel::create([
+            'penjualan_kode' => $request->penjualan_kode,
+            'pembeli' => $request->pembeli,
+            'tanggal_penjualan' => $request->tanggal_penjualan,
+            'user_id' => auth()->id() ?? 1 // default user_id 1 jika belum login
+        ]);
 
-    return view('penjualan.show', [
-        'breadcrumb'    => $breadcrumb,
-        'page'          => $page,
-        'penjualan'     => $penjualan,
-        'activeMenu'    => $activeMenu
+        return response()->json([
+            'status' => true,
+            'message' => 'Data penjualan berhasil disimpan.'
+        ]);
+    }
+
+    return response()->json([
+        'status' => false,
+        'message' => 'Permintaan tidak valid.'
     ]);
 }
 
 
-    public function edit(string $id)
+    public function edit_ajax(string $id)
     {
-        $penjualan = PenjualanModel::findOrFail($id);
+        $penjualan = PenjualanModel::find($id);
 
-        $breadcrumb = (object)[
-            'title' => 'Edit Penjualan',
-            'list' => ['Home', 'Penjualan', 'Edit']
-        ];
-
-        $page = (object)[
-            'title' => 'Edit Data Penjualan'
-        ];
-
-        $activeMenu = 'penjualan';
-
-        return view('penjualan.edit', compact('breadcrumb', 'page', 'penjualan', 'activeMenu'));
+        return view('penjualan.edit_ajax', compact('penjualan'));
     }
 
-    public function update(Request $request, string $id)
+    public function update_ajax(Request $request, string $id)
     {
-        $request->validate([
-            'penjualan_kode'     => 'required|string|min:3|max:20|unique:t_penjualan,penjualan_kode,' . $id . ',penjualan_id',
-            'pembeli'            => 'required|string|max:100',
-            'tanggal_penjualan' => 'required|date',
-            'user_id'            => 'required|integer'
-        ]);
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'penjualan_kode' => 'required|string|max:20|unique:t_penjualan,penjualan_kode,' . $id . ',penjualan_id',
+                'pembeli' => 'required|string|max:100',
+                'tanggal_penjualan' => 'required|date'
+            ];
 
-        $penjualan = PenjualanModel::findOrFail($id);
+            $validator = Validator::make($request->all(), $rules);
 
-        $penjualan->update([
-            'penjualan_kode'     => $request->penjualan_kode,
-            'pembeli'            => $request->pembeli,
-            'tanggal_penjualan' => $request->tanggal_penjualan,
-            'user_id'            => $request->user_id
-        ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi gagal.',
+                    'msgField' => $validator->errors()
+                ]);
+            }
 
-        return redirect('/penjualan')->with('success', 'Data penjualan berhasil diubah');
+            $penjualan = PenjualanModel::find($id);
+            if ($penjualan) {
+                $penjualan->update($request->all());
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data penjualan berhasil diupdate'
+                ]);
+            }
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Data penjualan tidak ditemukan'
+            ]);
+        }
+
+        return redirect('/');
     }
 
-    public function destroy(string $id)
+    public function confirm_ajax(string $id)
     {
-        $check = PenjualanModel::find($id);
+        $penjualan = PenjualanModel::find($id);
+        return view('penjualan.confirm_ajax', compact('penjualan'));
+    }
 
-        if (!$check) {
-            return redirect('/penjualan')->with('error', 'Data penjualan tidak ditemukan');
+    public function delete_ajax(Request $request, string $id)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $penjualan = PenjualanModel::find($id);
+            if ($penjualan) {
+                $penjualan->delete();
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data penjualan berhasil dihapus'
+                ]);
+            }
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Data penjualan tidak ditemukan'
+            ]);
         }
 
-        try {
-            PenjualanModel::destroy($id);
-            return redirect('/penjualan')->with('success', 'Data penjualan berhasil dihapus');
-        } catch (\Illuminate\Database\QueryException $e) {
-            return redirect('/penjualan')->with('error', 'Data penjualan gagal dihapus karena masih digunakan');
+        return redirect('/');
+    }
+
+    public function show_ajax(string $id)
+    {
+        $penjualan = PenjualanModel::find($id);
+
+        if (!$penjualan) {
+            return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
         }
+
+        return view('penjualan.show_ajax', compact('penjualan'));
     }
 }
