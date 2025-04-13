@@ -22,7 +22,7 @@ class AuthController extends Controller
     $validator = Validator::make($request->all(), [
         'username' => 'required|string|unique:m_user,username',
         'nama' => 'required|string|max:255',
-        'password' => 'required|string|min:5', // <--- tanpa konfirmasi
+        'password' => 'required|string|min:5', 
         'level_id' => 'required|exists:m_level,level_id',
     ]);
 
