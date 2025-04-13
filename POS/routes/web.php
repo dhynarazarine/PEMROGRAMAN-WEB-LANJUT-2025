@@ -154,6 +154,8 @@ Route::group(['prefix'=>'penjualan'], function(){
 Route::pattern('id', '[0-9]+'); // artinya ketika ada parameter {id}, maka harus berupa angka
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
+Route::get('/register', [AuthController::class, 'register']);
+Route::post('/register', [AuthController::class, 'postRegister']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::middleware(['auth'])->group(function() { // artinya semua route di dalam group ini harus login dulu
 });
