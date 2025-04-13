@@ -6,6 +6,7 @@ use App\Models\StokModel;
 use App\Models\BarangModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class StokController extends Controller
 {
@@ -156,4 +157,45 @@ class StokController extends Controller
             return redirect('/stok')->with('error', 'Data stok gagal dihapus karena masih digunakan');
         }
     }
+    public function create_ajax()
+{
+    $barang = BarangModel::select('barang_id', 'barang_nama')->get();
+    return view('stok.create_ajax', ['barang' => $barang]);
+}
+
+public function store_ajax(Request $request)
+{
+    if ($request->ajax() || $request->wantsJson()) {
+        $rules = [
+            'barang_id' => 'required|exists:m_barang,barang_id',
+            'stok_tanggal' => 'required|date',
+            'stok_jumlah' => 'required|integer|min:1'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi Gagal',
+                'msgField' => $validator->errors()
+            ]);
+        }
+
+        // Simpan data stok (user_id dari login)
+        StokModel::create([
+            'barang_id' => $request->barang_id,
+            'user_id' => auth()->id(), // atau $request->user_id jika tidak pakai login
+            'stok_tanggal' => $request->stok_tanggal,
+            'stok_jumlah' => $request->stok_jumlah,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Data stok berhasil disimpan'
+        ]);
+    }
+
+    return redirect('/');
+}
 }
