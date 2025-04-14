@@ -31,7 +31,9 @@ Route::group(['prefix'=>'user'], function(){
     Route::get('/{id}/delete_ajax',[UserController::class,'confirm_ajax']); // untuk tampilan form confirm delete yser Ajax
     Route::delete('/{id}/delete_ajax',[UserController::class,'delete_ajax']); // untuk hapus data user Ajax
     Route::get('/{id}/show_ajax', [UserController::class, 'show_ajax']); // Menampilkan detail user menggunakan AJAX
-    Route::delete('/{id}',[UserController::class,'destroy']);// menghapus data user 
+    Route::delete('/{id}',[UserController::class,'destroy']);// menghapus data user
+    Route::get('/profile', [UserController::class, 'profile_page']);
+    Route::post('/update_picture', [UserController::class, 'update_picture']);
 });
 
 //Tugas

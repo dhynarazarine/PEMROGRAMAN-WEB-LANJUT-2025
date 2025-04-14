@@ -27,6 +27,11 @@
                      <td>{{ $supplier->supplier_nama }}</td>
                  </tr>
                  <tr>
+                     <th>Kontak</th>
+                     <td>{{ $supplier->kontak }}</td>
+                 </tr>
+             </table>
+                 <tr>
                      <th>Alamat Supplier</th>
                      <td>{{ $supplier->alamat }}</td>
                  </tr>

@@ -6,6 +6,9 @@ use App\Models\LevelModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LevelController extends Controller
 {
@@ -286,5 +289,136 @@ class LevelController extends Controller
 
         return view('level.show_ajax', ['level' => $level]);
     }
+    public function import()
+    {
+        return view('level.import');
+    }
+
+    public function import_ajax(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'file_level' => ['required', 'mimes:xlsx', 'max:1024']
+            ];
+    
+            $validator = Validator::make($request->all(), $rules);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+    
+            $file = $request->file('file_level');
+    
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($file->getRealPath());
+            $sheet = $spreadsheet->getActiveSheet();
+            $data = $sheet->toArray(null, false, true, true);
+    
+            $insert = [];
+            if (count($data) > 1) {
+                foreach ($data as $index => $row) {
+                    if ($index > 1) { // Lewati header (baris pertama)
+                        $insert[] = [
+                            'level_kode' => $row['A'],
+                            'level_nama' => $row['B'],
+                            'created_at' => now(),
+                        ];
+                    }
+                }
+    
+                if (!empty($insert)) {
+                    LevelModel::insertOrIgnore($insert);
+                }
+    
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data level berhasil diimport'
+                ]);
+            }
+    
+            return response()->json([
+                'status' => false,
+                'message' => 'Tidak ada data yang diimport'
+            ]);
+        }
+    
+        return redirect('/');
+    }
+
+    
+     // Menampilkan form export level
+     public function export_excel()
+     {
+         // Ambil data level yang akan diekspor
+         $level = LevelModel::select('level_id', 'level_kode', 'level_nama')
+             ->orderBy('level_id')
+             ->get();
+ 
+         // Load library PhpSpreadsheet
+         $spreadsheet = new Spreadsheet();
+         $sheet = $spreadsheet->getActiveSheet();
+ 
+         // Set header kolom
+         $sheet->setCellValue('A1', 'No');
+         $sheet->setCellValue('B1', 'Kode Level');
+         $sheet->setCellValue('C1', 'Nama Level');
+ 
+         // Format header bold
+         $sheet->getStyle('A1:C1')->getFont()->setBold(true);
+ 
+         // Isi data level
+         $no = 1;
+         $baris = 2;
+         foreach ($level as $value) {
+             $sheet->setCellValue('A' . $baris, $no);
+             $sheet->setCellValue('B' . $baris, $value->level_kode);
+             $sheet->setCellValue('C' . $baris, $value->level_nama);
+             $baris++;
+             $no++;
+         }
+ 
+         // Set auto size untuk kolom
+         foreach (range('A', 'C') as $columnID) {
+             $sheet->getColumnDimension($columnID)->setAutoSize(true);
+         }
+ 
+         // Set title sheet
+         $sheet->setTitle('Data level');
+         
+         // Generate filename
+         $filename = 'Data_Level_' . date('Y-m-d_H-i-s') . '.xlsx';
+ 
+         // Set header untuk download file
+         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+         header('Content-Disposition: attachment;filename="' . $filename . '"');
+         header('Cache-Control: max-age=0');
+         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+         header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+         header('Cache-Control: cache, must-revalidate');
+         header('Pragma: public');
+ 
+         $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+         $writer->save('php://output');
+         exit;
+     }
+     public function export_pdf()
+     {
+         $level = LevelModel::select('level_id','level_kode','level_nama')
+             ->orderBy('level_id')
+             ->get();
+     
+         // use Barryvdh\DomPDF\Facade\Pdf;
+         $pdf = Pdf::loadView('level.export_pdf', ['level' => $level]);
+         $pdf->setPaper('a4', 'portrait'); // set ukuran kertas dan orientasi
+         $pdf->setOption("isRemoteEnabled", true); // set true jika ada gambar dari url
+         $pdf->render();
+     
+         return $pdf->stream('Data Level '.date('Y-m-d H:i:s').'.pdf');
+     }
 
 }

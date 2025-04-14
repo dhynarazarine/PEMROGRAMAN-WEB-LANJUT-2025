@@ -20,6 +20,11 @@
                     <small id="error-supplier_nama" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
+                    <label>Kontak</label>
+                    <textarea name="kontak" id="kontak" class="form-control" rows="3"></textarea>
+                    <small id="error-kontak" class="error-text form-text text-danger"></small>
+                </div>
+                <div class="form-group">
                     <label>Alamat Supplier</label>
                     <textarea name="alamat" id="alamat" class="form-control" rows="3"></textarea>
                     <small id="error-alamat" class="error-text form-text text-danger"></small>
@@ -48,6 +53,10 @@
                 alamat: {
                     required: false,
                     maxlength: 255
+                }
+                kontak: {
+                    required: false,
+                    maxlength: 50
                 }
             },
             submitHandler: function (form) {

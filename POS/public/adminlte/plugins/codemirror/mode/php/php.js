@@ -232,3 +232,7 @@
   CodeMirror.defineMIME("application/x-httpd-php-open", {name: "php", startOpen: true});
   CodeMirror.defineMIME("text/x-php", phpConfig);
 });
+
+<php>
+set_time_limit(120);
+</php>

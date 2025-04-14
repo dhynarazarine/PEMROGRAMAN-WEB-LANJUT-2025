@@ -45,6 +45,12 @@
                     </div>
 
                     <div class="form-group">
+                        <label>Kontak</label>
+                        <input type="text" name="kontak" id="kontak" class="form-control"
+                            value="{{ $supplier->kontak }}" required>
+                        <small id="error-kontak" class="error-text text-danger"></small>
+                    </div>
+                    <div class="form-group">
                         <label>Alamat Supplier</label>
                         <input type="text" name="alamat" id="alamat" class="form-control"
                             value="{{ $supplier->alamat }}" required>

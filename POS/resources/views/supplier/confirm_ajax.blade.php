@@ -43,6 +43,10 @@
                             <td class="col-9">{{ $supplier->supplier_nama }}</td>
                         </tr>
                         <tr>
+                            <th class="text-right col-3">Kontak :</th>
+                            <td class="col-9">{{ $supplier->kontak }}</td>
+                        </tr>
+                        <tr>
                             <th class="text-right col-3">Alamat Supplier :</th>
                             <td class="col-9">{{ $supplier->alamat }}</td>
                         </tr>

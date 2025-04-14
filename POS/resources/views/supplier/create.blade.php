@@ -19,6 +19,14 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label class="col-1 control-label col-form-label">Kontak</label>
+                    <div class="col-11">
+                        <input type="text" class="form-control" id="kontak" name="kontak" value="{{ old('kontak') }}"required>
+                        @error('kontak')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                <div class="form-group row">
                     <label class="col-1 control-label col-form-label">Nama Supplier</label>
                     <div class="col-11">
                         <input type="text" class="form-control" id="supplier_nama" name="supplier_nama" value="{{ old('supplier_nama') }}"required>
@@ -26,15 +34,15 @@
                             <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
                     </div>
+                    <div class="form-group row">
+                        <label class="col-1 control-label col-form-label">Alamat Supplier</label>
+                        <div class="col-11">
+                            <input type="text" class="form-control" id="alamat" name="alamat" value="{{ old('alamat') }}"required>
+                            @error('supplier_nama')
+                                <small class="form-text text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
                 </div>
-                <div class="form-group row">
-                    <label class="col-1 control-label col-form-label">Alamat Supplier</label>
-                    <div class="col-11">
-                        <input type="text" class="form-control" id="alamat" name="alamat" value="{{ old('alamat') }}"required>
-                        @error('supplier_nama')
-                            <small class="form-text text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-1 control-label col-form-label"></label>

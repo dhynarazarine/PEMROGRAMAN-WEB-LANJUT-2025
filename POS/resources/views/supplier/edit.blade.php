@@ -38,10 +38,19 @@
                     </div>
                 </div>
                 <div class="form-group row">
+                    <label class="col-1 control-label col-form-label">Kontak</label>
+                    <div class="col-11">
+                        <input type="text" class="form-control" id="kontak" name="kontak" value="{{ old('kontak', $supplier->kontak) }}" required>
+                        @error('kontak')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label class="col-1 control-label col-form-label">Alamat Supplier</label>
                     <div class="col-11">
                         <input type="text" class="form-control" id="alamat" name="alamat" value="{{ old('alamat', $supplier->alamat) }}" required>
-                        @error('supplier_nama')
+                        @error('alamat')
                             <small class="form-text text-danger">{{ $message }}</small>
                         @enderror
                     </div>

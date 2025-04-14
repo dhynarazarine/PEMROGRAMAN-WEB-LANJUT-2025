@@ -21,6 +21,10 @@
                     <input type="text" class="form-control" value="{{ $supplier->supplier_nama }}" readonly>
                 </div>
                 <div class="form-group">
+                    <label>Kontak</label>
+                    <input type="text" class="form-control" value="{{ $supplier->kontak }}" readonly>
+                </div>
+                <div class="form-group">
                     <label>Alamat</label>
                     <textarea class="form-control" readonly>{{ $supplier->alamat }}</textarea>
                 </div>
