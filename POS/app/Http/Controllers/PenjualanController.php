@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PenjualanModel;
+use App\Models\BarangModel;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -27,7 +28,7 @@ class PenjualanController extends Controller
 
     public function list(Request $request)
     {
-        $penjualan = PenjualanModel::select('penjualan_id', 'penjualan_kode', 'pembeli', 'tanggal_penjualan');
+        $penjualan = PenjualanModel::select('penjualan_id', 'penjualan_kode', 'pembeli', 'barang_id', 'tanggal_penjualan');
 
         if ($request->penjualan_id) {
             $penjualan->where('penjualan_id', $request->penjualan_id);
@@ -74,6 +75,7 @@ class PenjualanController extends Controller
         PenjualanModel::create([
             'penjualan_kode' => $request->penjualan_kode,
             'pembeli' => $request->pembeli,
+            'barang_id' => $request->barang_id,
             'tanggal_penjualan' => $request->tanggal_penjualan,
             'user_id' => auth()->id() ?? 1 // default user_id 1 jika belum login
         ]);

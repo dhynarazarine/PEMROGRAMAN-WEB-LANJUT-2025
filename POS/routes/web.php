@@ -208,7 +208,7 @@ Route::middleware(['authorize:ADM,MNG'])->group(function () {
             Route::get('export_pdf', [BarangController::class, 'export_pdf']); 
         });
     });
-    Route::middleware(['authorize:ADM,MNG'])->group(function () {
+    Route::middleware(['authorize:ADM,MNG,STF'])->group(function () {
         Route::middleware(['auth'])->group(function () { // artinya semua route di dalam group ini harus login dulu
             Route::get('/', [WelcomeController::class, 'index']);
             Route::group(['prefix' => 'user'], function () {

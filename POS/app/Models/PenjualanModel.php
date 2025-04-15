@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PenjualanModel extends Model
 {
@@ -15,6 +16,11 @@ class PenjualanModel extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id', 'pembeli', 'penjualan_kode', 'tanggal_penjualan'];
+    protected $fillable = ['user_id', 'pembeli', 'penjualan_kode', 'barang_id', 'tanggal_penjualan'];
+
+    public function barang(): BelongsTo 
+    {
+        return $this->belongsTo(BarangModel::class, 'barang_id', 'barang_id');
+    }
 
 }

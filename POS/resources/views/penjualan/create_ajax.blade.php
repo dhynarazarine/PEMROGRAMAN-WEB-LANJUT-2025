@@ -20,6 +20,11 @@
                     <small id="error-pembeli" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
+                    <label>Barang ID</label>
+                    <input type="text" name="barang_id" id="barang_id" class="form-control" required>
+                    <small id="error-barang_id" class="error-text form-text text-danger"></small>
+                </div>
+                <div class="form-group">
                     <label>Tanggal Penjualan</label>
                     <input type="date" name="tanggal_penjualan" id="tanggal_penjualan" class="form-control" required>
                     <small id="error-tanggal_penjualan" class="error-text form-text text-danger"></small>
@@ -45,6 +50,11 @@
                 pembeli: {
                     required: true,
                     minlength: 3,
+                    maxlength: 50
+                },
+                barang_id: {
+                    required: true,
+                    minlength: 1,
                     maxlength: 50
                 },
                 tanggal_penjualan: {

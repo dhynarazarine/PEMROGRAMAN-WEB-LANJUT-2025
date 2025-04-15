@@ -22,6 +22,7 @@
                     <th>ID</th>
                     <th>Kode Penjualan</th>
                     <th>Pembeli</th>
+                    <th>Barang ID</th>
                     <th>Tanggal Penjualan</th>
                     <th>Aksi</th>
                 </tr>
@@ -66,6 +67,11 @@
                 },
                 {
                     data: "pembeli",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "barang_id",
                     orderable: true,
                     searchable: true
                 },
